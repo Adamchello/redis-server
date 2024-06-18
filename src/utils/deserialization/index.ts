@@ -1,9 +1,14 @@
+import { deserializeArray } from "./array.js"
 import { deserializeBulkString } from "./bulk-string.js"
+import { deserializeInteger } from "./integer.js"
 
 // https://redis.io/docs/latest/develop/reference/protocol-spec/#resp-protocol-description
-const respDataTypes = {
+export const respDataTypes = {
     simpleString: "+",
-    bulkString: "$"
+    bulkString: "$",
+    error: "-",
+    integer: ":",
+    array: "*"
 }
 
 export const deserialize = (serializedInput: string) => {
@@ -16,10 +21,15 @@ export const deserialize = (serializedInput: string) => {
 
     switch (typePrefix) {
         case respDataTypes.simpleString:
-            // Simple string has just prefix and CRLF at the end.
+        case respDataTypes.error:
+            // Simple string and error have just prefix and CRLF at the end.
             return trimmedInput
+        case respDataTypes.integer:
+            return deserializeInteger(trimmedInput)
         case respDataTypes.bulkString:
             return deserializeBulkString(trimmedInput)
+        case respDataTypes.array:
+            return deserializeArray(trimmedInput)
         default:
             throw new Error("Unkown type prefix")
     }
