@@ -1,31 +1,35 @@
-import { deserialize, respDataTypes } from "./index.js"
+import { ERRORS } from '../constans.js'
+import { deserialize, dataTypePrefixes } from './index.js'
 
-export const deserializeArray = (trimmedInput: string) => {
-    const [arrLength, ...arrElements] = trimmedInput.split("\r\n");
+export const deserializeArray = (input: string): (string | number)[] => {
+  const [arrLength, ...arrElements] = input.split('\r\n')
 
-    // Special variation for null
-    if (arrLength === "-1" && arrElements.length === 0) {
-        return null
+  // Special variation for null
+  if (arrLength === '-1' && arrElements.length === 0) {
+    return null
+  }
+
+  const deserializedArray = arrElements.reduce((acc, el, i, arr) => {
+    if (el === null) return acc
+
+    if (el[0] === dataTypePrefixes.bulkString) {
+      el += '\r\n' + `${arr[i + 1]}\r\n`
+      arr[i + 1] = null
+    } else {
+      el += '\r\n'
     }
 
-    const passedArrayLength = Number(arrLength)
-    const deserializedArray = [];
-
-    for (let i = 0; i < arrElements.length; i++) {
-        let el = arrElements[i];
-
-        if (el[0] === respDataTypes.bulkString) {
-            el += "\r\n" + `${arrElements[++i]}\r\n`;
-        } else {
-            el += "\r\n";
-        }
-
-        deserializedArray.push(deserialize(el));
+    if (el !== null) {
+      acc.push(deserialize(el))
     }
 
-    if (deserializedArray.length !== passedArrayLength || Number.isNaN(passedArrayLength)) {
-        throw new Error("Array has incorrect length");
-    }
+    return acc
+  }, [])
 
-    return deserializedArray
+  const passedArrayLength = Number(arrLength)
+  if (deserializedArray.length !== passedArrayLength || Number.isNaN(passedArrayLength)) {
+    throw new Error(ERRORS.ARRAY.INCORRECT_LENGTH)
+  }
+
+  return deserializedArray
 }

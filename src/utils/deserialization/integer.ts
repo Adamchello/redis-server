@@ -1,9 +1,11 @@
-export const deserializeInteger = (trimmedInput: string) => {
-    const inputNumber = Number(trimmedInput)
+import { ERRORS } from '../constans.js'
 
-    if (Number.isNaN(inputNumber)) {
-        throw new Error("Integer isn't valid number")
-    }
+export const deserializeInteger = (input: string): number => {
+  const inputNumber = Number(input)
 
-    return inputNumber
+  if (Number.isNaN(inputNumber)) {
+    throw new Error(ERRORS.INTEGER.INVALID_NUMBER)
+  }
+
+  return inputNumber
 }
