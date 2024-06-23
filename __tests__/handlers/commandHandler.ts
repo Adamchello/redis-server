@@ -1,5 +1,5 @@
 import { handleCommand } from '../../src/handlers/commandHandler.js'
-import { ERRORS } from '../../src/utils/constans.js'
+import { ERRORS } from '../../src/utils/constants.js'
 import { serialize } from '../../src/utils/serialization.js'
 
 describe('HandleCommand function', () => {

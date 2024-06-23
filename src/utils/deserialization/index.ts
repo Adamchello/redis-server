@@ -1,4 +1,4 @@
-import { DATA_TYPE_PREFIXES, ERRORS } from '../constans.js'
+import { DATA_TYPE_PREFIXES, ERRORS } from '../constants.js'
 import { deserializeArray } from './array.js'
 import { deserializeBulkString } from './bulk-string.js'
 import { deserializeInteger } from './integer.js'

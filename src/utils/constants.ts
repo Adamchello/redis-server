@@ -4,6 +4,8 @@ export const ERRORS = {
     UNKOWN_PREFIX: 'Unkown type prefix',
   },
   SERIALIZE: {
+    INVALID_SIMPLE_STRING_VALUE: 'Value must be a string for simpleString type',
+    INVALID_ERROR_VALUE: 'Value must be a string for error type',
     INVALID_BULK_STRING_VALUE: 'Value must be a string for bulkString type',
     INVALID_INTEGER_VALUE: 'Value must be a number for integer type',
     INVALID_ARRAY_VALUE: 'Value must be an array for array type',

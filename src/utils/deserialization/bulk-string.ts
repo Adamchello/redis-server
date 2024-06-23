@@ -1,4 +1,4 @@
-import { ERRORS } from '../constans.js'
+import { ERRORS } from '../constants.js'
 
 export const deserializeBulkString = (input: string): string => {
   const [textLength, text] = input.split('\r\n')

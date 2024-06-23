@@ -2,7 +2,7 @@ import net from 'net'
 import { serialize } from '../utils/serialization.js'
 import { deserialize } from '../utils/deserialization/index.js'
 import { handleCommand } from './commandHandler.js'
-import { ERRORS } from '../utils/constans.js'
+import { ERRORS } from '../utils/constants.js'
 
 export function onData(data: Buffer, socket: net.Socket) {
   try {

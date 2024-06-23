@@ -1,4 +1,4 @@
-import { ERRORS } from '../../src/utils/constans.js'
+import { ERRORS } from '../../src/utils/constants.js'
 import { deserialize } from '../../src/utils/deserialization/index.js'
 
 describe('Deserialize function', () => {

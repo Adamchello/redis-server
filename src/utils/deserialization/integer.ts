@@ -1,4 +1,4 @@
-import { ERRORS } from '../constans.js'
+import { ERRORS } from '../constants.js'
 
 export const deserializeInteger = (input: string): number => {
   const inputNumber = Number(input)
