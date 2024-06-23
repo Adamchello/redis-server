@@ -1,5 +1,5 @@
-import { ERRORS } from '../constans.js'
-import { deserialize, dataTypePrefixes } from './index.js'
+import { DATA_TYPE_PREFIXES, ERRORS } from '../constans.js'
+import { deserialize } from './index.js'
 
 export const deserializeArray = (input: string): (string | number)[] => {
   const [arrLength, ...arrElements] = input.split('\r\n')
@@ -12,7 +12,7 @@ export const deserializeArray = (input: string): (string | number)[] => {
   const deserializedArray = arrElements.reduce((acc, el, i, arr) => {
     if (el === null) return acc
 
-    if (el[0] === dataTypePrefixes.bulkString) {
+    if (el[0] === DATA_TYPE_PREFIXES.bulkString) {
       el += '\r\n' + `${arr[i + 1]}\r\n`
       arr[i + 1] = null
     } else {
