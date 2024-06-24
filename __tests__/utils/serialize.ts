@@ -5,7 +5,7 @@ import { serialize } from '../../src/utils/serialization.js'
 
 describe('Serialize function', () => {
   describe('Simple string serialization', () => {
-    test("should throw an error when the type of input isn't string and type is simpleString", () => {
+    test("should throw an error when the type of input isn't string", () => {
       const invalidSimpleStringValue: any = 5
 
       expect(() => {
@@ -20,7 +20,7 @@ describe('Serialize function', () => {
   })
 
   describe('Error serialization', () => {
-    test("should throw an error when the type of input isn't string and type is error", () => {
+    test("should throw an error when the type of input isn't string", () => {
       const invalidErrorValue: any = 5
 
       expect(() => {
@@ -35,7 +35,7 @@ describe('Serialize function', () => {
   })
 
   describe('Bulk string serialization', () => {
-    test("should throw an error when the type of input isn't string and type is bulkString", () => {
+    test("should throw an error when the type of input isn't string", () => {
       const invalidBulkStringValue: any = 5
 
       expect(() => {
@@ -50,7 +50,7 @@ describe('Serialize function', () => {
   })
 
   describe('Integer serialization', () => {
-    test("should throw an error when the type of input isn't number and type is integer", () => {
+    test("should throw an error when the type of input isn't number", () => {
       const invalidIntegerValue: any = 'abc'
 
       expect(() => {
@@ -65,7 +65,7 @@ describe('Serialize function', () => {
   })
 
   describe('Array serialization', () => {
-    test("should throw an error when the type of input isn't array and type is array", () => {
+    test("should throw an error when the type of input isn't array", () => {
       const invalidArrayValue: any = 'abc'
 
       expect(() => {
