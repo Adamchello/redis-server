@@ -1,5 +1,5 @@
 import { RESP_VALUE_TYPES } from '../types/respTypes.js'
-import { ERRORS } from './constans.js'
+import { ERRORS } from './constants.js'
 
 export const serialize = <T extends keyof RESP_VALUE_TYPES>(
   value: RESP_VALUE_TYPES[T],
@@ -7,8 +7,14 @@ export const serialize = <T extends keyof RESP_VALUE_TYPES>(
 ) => {
   switch (valueType) {
     case 'simpleString':
+      if (typeof value !== 'string') {
+        throw new Error(ERRORS.SERIALIZE.INVALID_SIMPLE_STRING_VALUE)
+      }
       return `+${value}\r\n`
     case 'error':
+      if (typeof value !== 'string') {
+        throw new Error(ERRORS.SERIALIZE.INVALID_ERROR_VALUE)
+      }
       return `-${value}\r\n`
     case 'bulkString':
       if (typeof value !== 'string') {

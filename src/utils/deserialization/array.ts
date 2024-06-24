@@ -1,4 +1,4 @@
-import { DATA_TYPE_PREFIXES, ERRORS } from '../constans.js'
+import { DATA_TYPE_PREFIXES, ERRORS } from '../constants.js'
 import { deserialize } from './index.js'
 
 export const deserializeArray = (input: string): (string | number)[] => {

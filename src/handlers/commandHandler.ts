@@ -1,6 +1,6 @@
 import net from 'net'
 import { serialize } from '../utils/serialization.js'
-import { COMMANDS, ERRORS } from '../utils/constans.js'
+import { COMMANDS, ERRORS } from '../utils/constants.js'
 
 export function handleCommand(commands: string[], socket: net.Socket) {
   if (!Array.isArray(commands) || commands.length === 0) {
