@@ -1,89 +1,42 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
+import { RESP_VALUE_TYPES } from '../../src/types/respTypes.js'
 import { ERRORS } from '../../src/utils/constants.js'
 import { serialize } from '../../src/utils/serialization.js'
 
 describe('Serialize function', () => {
-  describe('Simple string serialization', () => {
-    test("should throw an error when the type of input isn't string", () => {
-      const invalidSimpleStringValue: any = 5
+  describe('Type and value validation', () => {
+    const invalidInputs = [
+      { input: 5, type: 'simpleString', error: ERRORS.SERIALIZE.INVALID_SIMPLE_STRING_VALUE },
+      { input: 5, type: 'error', error: ERRORS.SERIALIZE.INVALID_ERROR_VALUE },
+      { input: 5, type: 'bulkString', error: ERRORS.SERIALIZE.INVALID_BULK_STRING_VALUE },
+      { input: 'abc', type: 'integer', error: ERRORS.SERIALIZE.INVALID_INTEGER_VALUE },
+      { input: 'abc', type: 'array', error: ERRORS.SERIALIZE.INVALID_ARRAY_VALUE },
+      { input: 'test', type: 'unknown', error: ERRORS.SERIALIZE.UNKNOWN_TYPE },
+    ]
 
-      expect(() => {
-        serialize(invalidSimpleStringValue, 'simpleString')
-      }).toThrow(ERRORS.SERIALIZE.INVALID_SIMPLE_STRING_VALUE)
-    })
-
-    test('should parse input to a simple string', () => {
-      const result = serialize('OK', 'simpleString')
-      expect(result).toBe('+OK\r\n')
-    })
+    test.each(invalidInputs)(
+      'should throw error for invalid $type input',
+      ({ input, type, error }) => {
+        expect(() => serialize(input, type as keyof RESP_VALUE_TYPES)).toThrow(error)
+      },
+    )
   })
 
-  describe('Error serialization', () => {
-    test("should throw an error when the type of input isn't string", () => {
-      const invalidErrorValue: any = 5
+  describe('Output validation', () => {
+    const validInputs = [
+      { input: 'OK', type: 'simpleString', expected: '+OK\r\n' },
+      { input: 'Error message', type: 'error', expected: '-Error message\r\n' },
+      { input: 'Hello, World', type: 'bulkString', expected: '$12\r\nHello, World\r\n' },
+      { input: 152351, type: 'integer', expected: ':152351\r\n' },
+      {
+        input: ['Hello, World', 16, 'OK'],
+        type: 'array',
+        expected: '*3\r\n$12\r\nHello, World\r\n:16\r\n$2\r\nOK\r\n',
+      },
+    ]
 
-      expect(() => {
-        serialize(invalidErrorValue, 'error')
-      }).toThrow(ERRORS.SERIALIZE.INVALID_ERROR_VALUE)
+    test.each(validInputs)('should correctly serialize $type', ({ input, type, expected }) => {
+      const result = serialize(input, type as keyof RESP_VALUE_TYPES)
+      expect(result).toBe(expected)
     })
-
-    test('should parse input to an error', () => {
-      const result = serialize('Error message', 'error')
-      expect(result).toBe('-Error message\r\n')
-    })
-  })
-
-  describe('Bulk string serialization', () => {
-    test("should throw an error when the type of input isn't string", () => {
-      const invalidBulkStringValue: any = 5
-
-      expect(() => {
-        serialize(invalidBulkStringValue, 'bulkString')
-      }).toThrow(ERRORS.SERIALIZE.INVALID_BULK_STRING_VALUE)
-    })
-
-    test('should parse input to a bulk string', () => {
-      const result = serialize('Hello, World', 'bulkString')
-      expect(result).toBe('$12\r\nHello, World\r\n')
-    })
-  })
-
-  describe('Integer serialization', () => {
-    test("should throw an error when the type of input isn't number", () => {
-      const invalidIntegerValue: any = 'abc'
-
-      expect(() => {
-        serialize(invalidIntegerValue, 'integer')
-      }).toThrow(ERRORS.SERIALIZE.INVALID_INTEGER_VALUE)
-    })
-
-    test('should parse input to an integer', () => {
-      const result = serialize(152351, 'integer')
-      expect(result).toBe(':152351\r\n')
-    })
-  })
-
-  describe('Array serialization', () => {
-    test("should throw an error when the type of input isn't array", () => {
-      const invalidArrayValue: any = 'abc'
-
-      expect(() => {
-        serialize(invalidArrayValue, 'array')
-      }).toThrow(ERRORS.SERIALIZE.INVALID_ARRAY_VALUE)
-    })
-
-    test('should parse input to an array', () => {
-      const result = serialize(['Hello, World', 16, 'OK'], 'array')
-      expect(result).toBe('*3\r\n$12\r\nHello, World\r\n:16\r\n$2\r\nOK\r\n')
-    })
-  })
-
-  test('should throw an error when an unknown type is passed', () => {
-    const unknownInputType: any = 'test'
-
-    expect(() => {
-      serialize('test', unknownInputType)
-    }).toThrow(ERRORS.SERIALIZE.UNKNOWN_TYPE)
   })
 })
