@@ -1,18 +1,17 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ERRORS } from '../../src/utils/constants.js'
 import { deserialize } from '../../src/utils/deserialization/index.js'
 
 describe('Deserialize function', () => {
   describe('handles errors related to missing CRLF', () => {
     const missingSuffixInputs = [
-      { input: '+OK', error: ERRORS.DESERIALIZE.MISSING_CRLF, type: 'simple string' },
-      { input: '-Error message', error: ERRORS.DESERIALIZE.MISSING_CRLF, type: 'error message' },
-      { input: '$6\r\nfoobar', error: ERRORS.DESERIALIZE.MISSING_CRLF, type: 'bulk string' },
-      { input: ':123', error: ERRORS.DESERIALIZE.MISSING_CRLF, type: 'integer' },
+      { input: '+OK', type: 'simple string', error: ERRORS.DESERIALIZE.MISSING_CRLF },
+      { input: '-Error message', type: 'error message', error: ERRORS.DESERIALIZE.MISSING_CRLF },
+      { input: '$6\r\nfoobar', type: 'bulk string', error: ERRORS.DESERIALIZE.MISSING_CRLF },
+      { input: ':123', type: 'integer', error: ERRORS.DESERIALIZE.MISSING_CRLF },
       {
         input: '*2\r\n$4\r\necho\r\n$11\r\nhello world',
-        error: ERRORS.DESERIALIZE.MISSING_CRLF,
         type: 'array',
+        error: ERRORS.DESERIALIZE.MISSING_CRLF,
       },
     ]
 
