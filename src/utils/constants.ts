@@ -40,4 +40,6 @@ export const DATA_TYPE_PREFIXES = {
 export const COMMANDS = {
   PING: 'PING',
   ECHO: 'ECHO',
+  SET: 'SET',
+  GET: 'GET'
 }
