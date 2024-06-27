@@ -26,17 +26,24 @@ export function handleCommand(commands: string[], socket: net.Socket) {
       break
     case COMMANDS.SET:
       if (commands.length > 2) {
-        const [_, key, value] = commands
+        const [, key, value] = commands
         redisStore.set(key, value)
+        socket.write(serialize('OK', 'simpleString'))
+      } else {
+        socket.write(serialize(ERRORS.COMMAND.MISSING_SET_ARGUMENTS, 'error'))
       }
-      socket.write(serialize("OK", 'simpleString'))
       break
     case COMMANDS.GET:
       if (commands.length > 1) {
-        const [_, key] = commands
+        const [, key] = commands
         const storeValue = redisStore.get(key)
-        console.log("storeValue", storeValue)
-        socket.write(serialize(storeValue, 'bulkString'))
+        if (storeValue === undefined) {
+          socket.write(serialize(ERRORS.COMMAND.GET_KEY_NOT_FOUND, 'error'))
+        } else {
+          socket.write(serialize(storeValue, 'bulkString'))
+        }
+      } else {
+        socket.write(serialize(ERRORS.COMMAND.MISSING_GET_ARGUMENT, 'error'))
       }
       break
     default:

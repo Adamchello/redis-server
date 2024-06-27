@@ -43,4 +43,42 @@ describe('HandleCommand function', () => {
 
     expect(socket.write).toHaveBeenCalledWith(echoResult)
   })
+
+  it('should answer the SET command with missing arguments error', () => {
+    handleCommand(['SET', 'key'], socket)
+    expect(socket.write).toHaveBeenCalledWith(
+      serialize(ERRORS.COMMAND.MISSING_SET_ARGUMENTS, 'error'),
+    )
+  })
+
+  it('should answer the SET command with OK response', () => {
+    handleCommand(['SET', 'key', 'value'], socket)
+    const setResult = serialize('OK', 'simpleString')
+
+    expect(socket.write).toHaveBeenCalledWith(setResult)
+  })
+
+  it('should answer the GET command with missing argument error', () => {
+    handleCommand(['GET'], socket)
+    expect(socket.write).toHaveBeenCalledWith(
+      serialize(ERRORS.COMMAND.MISSING_GET_ARGUMENT, 'error'),
+    )
+  })
+
+  it('should answer the GET command with key not found error if key does not exist', () => {
+    handleCommand(['GET', 'keyyy'], socket)
+    expect(socket.write).toHaveBeenCalledWith(serialize(ERRORS.COMMAND.GET_KEY_NOT_FOUND, 'error'))
+  })
+
+  it('should answer the GET command with bulkString response if key exists', () => {
+    handleCommand(['SET', 'name', 'John'], socket)
+    const setResult = serialize('OK', 'simpleString')
+
+    expect(socket.write).toHaveBeenCalledWith(setResult)
+
+    handleCommand(['GET', 'name'], socket)
+    const getResult = serialize('John', 'bulkString')
+
+    expect(socket.write).toHaveBeenCalledWith(getResult)
+  })
 })
