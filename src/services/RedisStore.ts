@@ -2,10 +2,18 @@ type RedisKey = string
 type RedisValue = { value: string; expiry: number | null }
 
 export class RedisStore {
+  private static instance: RedisStore
   private store: Map<RedisKey, RedisValue>
 
-  constructor() {
+  private constructor() {
     this.store = new Map()
+  }
+
+  public static getInstance(): RedisStore {
+    if (!RedisStore.instance) {
+      RedisStore.instance = new RedisStore()
+    }
+    return RedisStore.instance
   }
 
   set(key: RedisKey, value: string) {
