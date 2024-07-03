@@ -21,7 +21,7 @@ describe('HandleCommand function', () => {
     expect(socket.write).toHaveBeenCalledWith(serialize(ERRORS.COMMAND.UNKNOWN, 'error'))
   })
 
-  it('should answer the PING command with PONG response', () => {
+  it('should answer the command with a correct response', () => {
     handleCommand(['PING'], socket)
     const pingResult = serialize('PONG', 'simpleString')
 
