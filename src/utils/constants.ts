@@ -24,6 +24,9 @@ export const ERRORS = {
   COMMAND: {
     UNKNOWN: 'Unknown command',
     MISSING_ECHO_ARGUMENT: 'Missing argument for ECHO',
+    MISSING_SET_ARGUMENTS: 'Missing key and value for SET',
+    MISSING_GET_ARGUMENT: 'Missing argument for GET',
+    GET_KEY_NOT_FOUND: 'Passed key do not exist in store',
     PROCESSING: 'Error processing command',
   },
 }
@@ -40,4 +43,6 @@ export const DATA_TYPE_PREFIXES = {
 export const COMMANDS = {
   PING: 'PING',
   ECHO: 'ECHO',
+  SET: 'SET',
+  GET: 'GET',
 }

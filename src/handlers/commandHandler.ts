@@ -1,6 +1,8 @@
 import net from 'net'
 import { serialize } from '../utils/serialization.js'
-import { COMMANDS, ERRORS } from '../utils/constants.js'
+import { ERRORS } from '../utils/constants.js'
+import { commandRegistry } from '../commands/commandRegistry.js'
+import { RedisStore } from '../services/RedisStore.js'
 
 export function handleCommand(commands: string[], socket: net.Socket) {
   if (!Array.isArray(commands) || commands.length === 0) {
@@ -8,20 +10,15 @@ export function handleCommand(commands: string[], socket: net.Socket) {
     return
   }
 
-  const command = commands[0].toUpperCase()
+  const [command, ...args] = commands
+  const handleFunction = commandRegistry[command.toUpperCase()]
 
-  switch (command) {
-    case COMMANDS.PING:
-      socket.write(serialize('PONG', 'simpleString'))
-      break
-    case COMMANDS.ECHO:
-      if (commands.length > 1) {
-        socket.write(serialize(commands[1], 'bulkString'))
-      } else {
-        socket.write(serialize(ERRORS.COMMAND.MISSING_ECHO_ARGUMENT, 'error'))
-      }
-      break
-    default:
-      socket.write(serialize(ERRORS.COMMAND.UNKNOWN, 'error'))
+  if (!handleFunction) {
+    socket.write(serialize(ERRORS.COMMAND.UNKNOWN, 'error'))
+    return
   }
+
+  const redisStore = RedisStore.getInstance()
+  const result = handleFunction(args, redisStore)
+  socket.write(result)
 }

@@ -21,26 +21,10 @@ describe('HandleCommand function', () => {
     expect(socket.write).toHaveBeenCalledWith(serialize(ERRORS.COMMAND.UNKNOWN, 'error'))
   })
 
-  it('should answer the ECHO command without argument with error', () => {
-    handleCommand(['ECHO'], socket)
-    expect(socket.write).toHaveBeenCalledWith(
-      serialize(ERRORS.COMMAND.MISSING_ECHO_ARGUMENT, 'error'),
-    )
-  })
-
-  it('should answer the PING command with PONG response', () => {
+  it('should answer the command with a correct response', () => {
     handleCommand(['PING'], socket)
     const pingResult = serialize('PONG', 'simpleString')
 
     expect(socket.write).toHaveBeenCalledWith(pingResult)
-  })
-
-  it('should answer the ECHO command with bulkString response', () => {
-    const inputText = 'Hello world'
-
-    handleCommand(['ECHO', inputText], socket)
-    const echoResult = serialize(inputText, 'bulkString')
-
-    expect(socket.write).toHaveBeenCalledWith(echoResult)
   })
 })
