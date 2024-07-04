@@ -45,4 +45,16 @@ describe('Get command function', () => {
 
     expect(result).toBe(serialize(value, 'bulkString'))
   })
+
+  it('should not return the value if expiration time past', () => {
+    const key = 'someKey'
+    const value = 'myValue'
+    const expirationTime = new Date('2000-01-01').getTime()
+
+    store.set(key, value, expirationTime)
+
+    const result = handleGet([key], store)
+
+    expect(result).toBe(serialize(ERRORS.COMMAND.GET_KEY_NOT_FOUND, 'error'))
+  })
 })

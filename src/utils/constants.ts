@@ -25,6 +25,8 @@ export const ERRORS = {
     UNKNOWN: 'Unknown command',
     MISSING_ECHO_ARGUMENT: 'Missing argument for ECHO',
     MISSING_SET_ARGUMENTS: 'Missing key and value for SET',
+    INVALID_SET_EXPIRY_TYPE: 'Invalid expiry type for SET',
+    INVALID_SET_EXPIRY_VALUE: 'Invalid expiry value for SET',
     MISSING_GET_ARGUMENT: 'Missing argument for GET',
     GET_KEY_NOT_FOUND: 'Passed key do not exist in store',
     PROCESSING: 'Error processing command',

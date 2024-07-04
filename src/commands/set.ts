@@ -13,12 +13,12 @@ export function handleSet(args: string[], store: RedisStore) {
     const [key, value, expiryType, expiryTimeString] = args
 
     if (!AVAILABLE_EXPIRY_TYPES.includes(expiryType)) {
-      return 'not_found'
+      return serialize(ERRORS.COMMAND.INVALID_SET_EXPIRY_TYPE, 'error')
     }
 
     const expiryTimeValue = Number(expiryTimeString)
     if (Number.isNaN(expiryTimeValue)) {
-      return 'invalid arguemnt'
+      return serialize(ERRORS.COMMAND.INVALID_SET_EXPIRY_VALUE, 'error')
     }
 
     const expiryTimestamp = getExpiryTimeInMilliseconds(expiryType, expiryTimeValue)
