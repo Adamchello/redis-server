@@ -16,13 +16,19 @@ export class RedisStore {
     return RedisStore.instance
   }
 
-  set(key: RedisKey, value: string) {
-    this.store.set(key, { value, expiry: null })
+  set(key: RedisKey, value: string, expiry?: number) {
+    this.store.set(key, { value, expiry: expiry || null })
   }
 
   get(key: RedisKey): string | undefined {
     const entry = this.store.get(key)
     if (!entry) return undefined
-    return entry.value
+    if (!entry.expiry) return entry.value
+
+    const currentTimestamp = new Date().getTime()
+    if (currentTimestamp <= entry.expiry) return entry.value
+
+    this.store.delete(key)
+    return undefined
   }
 }
