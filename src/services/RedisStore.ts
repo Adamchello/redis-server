@@ -1,5 +1,5 @@
 type RedisKey = string
-type RedisValue = { value: string; expiry: number | null }
+type RedisValue = { value: string | number | (number | string)[]; expiry: number | null }
 
 export class RedisStore {
   private static instance: RedisStore
@@ -16,11 +16,23 @@ export class RedisStore {
     return RedisStore.instance
   }
 
-  set(key: RedisKey, value: string, expiry?: number) {
+  set(key: RedisKey, value: RedisValue['value'], expiry?: number) {
     this.store.set(key, { value, expiry: expiry || null })
   }
 
-  get(key: RedisKey): string | undefined {
+  hasKey(key: RedisKey) {
+    return this.store.has(key)
+  }
+
+  delete(key: RedisKey) {
+    return this.store.delete(key)
+  }
+
+  clear() {
+    this.store.clear()
+  }
+
+  get(key: RedisKey): RedisValue['value'] | undefined {
     const entry = this.store.get(key)
     if (!entry) return undefined
     if (!entry.expiry) return entry.value

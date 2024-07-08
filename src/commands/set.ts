@@ -2,18 +2,21 @@ import { serialize } from '../utils/serialization.js'
 import { ERRORS } from '../utils/constants.js'
 import { RedisStore } from '../services/RedisStore.js'
 import { AVAILABLE_EXPIRY_TYPES, getExpiryTimeInMilliseconds } from '../utils/expiration.js'
+import { parseInputValue } from '../utils/parsing.js'
 
 export function handleSet(args: string[], store: RedisStore) {
   if (args.length !== 2 && args.length !== 4) {
     return serialize(ERRORS.COMMAND.MISSING_SET_ARGUMENTS, 'error')
   }
-  
+
   if (args.length === 2) {
     const [key, value] = args
-    store.set(key, value)
+
+    const parsedValue = parseInputValue(value)
+    store.set(key, parsedValue)
 
     return serialize('OK', 'simpleString')
-  } 
+  }
 
   const [key, value, expiryType, expiryTimeString] = args
 
@@ -27,7 +30,9 @@ export function handleSet(args: string[], store: RedisStore) {
   }
 
   const expiryTimestamp = getExpiryTimeInMilliseconds(expiryType, expiryTimeValue)
-  store.set(key, value, expiryTimestamp)
+  const parsedValue = parseInputValue(value)
+
+  store.set(key, parsedValue, expiryTimestamp)
 
   return serialize('OK', 'simpleString')
 }

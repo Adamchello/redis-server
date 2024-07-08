@@ -36,16 +36,6 @@ describe('Get command function', () => {
     expect(result).toBe(serialize(ERRORS.COMMAND.GET_KEY_NOT_FOUND, 'error'))
   })
 
-  it('should return the value if key is found in the store', () => {
-    const key = 'myKey'
-    const value = 'myValue'
-    store.set(key, value)
-
-    const result = handleGet([key], store)
-
-    expect(result).toBe(serialize(value, 'bulkString'))
-  })
-
   it('should not return the value if expiration time past', () => {
     const key = 'someKey'
     const value = 'myValue'
@@ -57,4 +47,21 @@ describe('Get command function', () => {
 
     expect(result).toBe(serialize(ERRORS.COMMAND.GET_KEY_NOT_FOUND, 'error'))
   })
+
+  const valueTestCases = [
+    { key: 'stringKey', value: 'stringValue', type: 'bulkString' as const },
+    { key: 'numberKey', value: 2345, type: 'integer' as const },
+    { key: 'arrayKey', value: [1234, 'test', 324], type: 'array' as const },
+  ]
+
+  test.each(valueTestCases)(
+    'should return the $type value if key is found in the store',
+    ({ key, value, type }) => {
+      store.set(key, value)
+
+      const result = handleGet([key], store)
+
+      expect(result).toBe(serialize(value, type))
+    },
+  )
 })
