@@ -24,6 +24,8 @@ export const ERRORS = {
   COMMAND: {
     UNKNOWN: 'Unknown command',
     MISSING_ECHO_ARGUMENT: 'Missing argument for ECHO',
+    MISSING_EXISTS_ARGUMENT: 'Missing argument for EXISTS',
+    MISSING_DEL_ARGUMENT: 'Missing argument for DEL',
     MISSING_SET_ARGUMENTS: 'Missing key and value for SET',
     INVALID_SET_EXPIRY_TYPE: 'Invalid expiry type for SET',
     INVALID_SET_EXPIRY_VALUE: 'Invalid expiry value for SET',

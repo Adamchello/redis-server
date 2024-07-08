@@ -14,5 +14,10 @@ export function handleGet(args: string[], store: RedisStore) {
     return serialize(ERRORS.COMMAND.GET_KEY_NOT_FOUND, 'error')
   }
 
+  if (Array.isArray(storeValue)) {
+    return serialize(storeValue, 'array')
+  } else if (typeof storeValue === 'number') {
+    return serialize(storeValue, 'integer')
+  }
   return serialize(storeValue, 'bulkString')
 }
